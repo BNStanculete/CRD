@@ -1,0 +1,19 @@
+{
+    "OffensesBeforeBan": 3,
+    "NormalReportsBeforeUnban": 20,
+    "GracePeriodSecondsPerHost": 5,
+    "Metrics": [
+        {
+            "Name": "Connections",
+            "Threshold": 0.4
+        },
+        {
+            "Name": "Packets",
+            "Threshold": 0.4
+        },
+        {
+            "Name": "PacketSize",
+            "Threshold": 0.02
+        }
+    ]
+}
