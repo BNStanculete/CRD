@@ -2,6 +2,7 @@
     "OffensesBeforeBan": 3,
     "NormalReportsBeforeUnban": 20,
     "GracePeriodSecondsPerHost": 5,
+    "AdaptiveThresholding": true,
     "Metrics": [
         {
             "Name": "Connections",
@@ -13,7 +14,7 @@
         },
         {
             "Name": "PacketSize",
-            "Threshold": 0.02
+            "Threshold": 0.025
         }
     ]
 }
