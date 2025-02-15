@@ -28,19 +28,6 @@ HOSTS = [
     }
 ]
 
-SWITCHES = [
-    {
-        "Switch": "s1",
-        "P4InfoFile": "build/firewall.p4.p4info.txt",
-        "BMV2File": "build/firewall.json"
-    },
-    {
-        "Switch": "s2",
-        "P4InfoFile": "build/switch.p4.p4info.txt",
-        "BMV2File": "build/switch.json"
-    }
-]
-
 HOST_CONNECTIONS = [
     {
         "Host": 0,

@@ -53,8 +53,8 @@ def getPositives(counterController: SwitchController):
 
 if __name__ == '__main__':
     # Instantiate a P4Runtime helper from the p4info file
-    firewallController = FirewallController(0)
-    counterController = CounterController(1)
+    firewallController = FirewallController()
+    counterController = CounterController("s2")
     
     banned_hosts = []
 

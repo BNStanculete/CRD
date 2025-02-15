@@ -1,8 +1,10 @@
 import p4runtime_lib.bmv2
 import p4runtime_lib.helper
 
-from modules.constants import SWITCHES, HOSTS, HOST_CONNECTIONS, SWITCH_CONNECTIONS
+from modules.constants import HOSTS, HOST_CONNECTIONS, SWITCH_CONNECTIONS
 from modules.logger import Logger, LoggingLevel
+
+from typing import Tuple, Dict
 
 class SwitchController:
     def writeIPForwardingRules(self):
@@ -43,8 +45,9 @@ class SwitchController:
         # Writing default action
         table_entry = self._p4info_helper.buildTableEntry(
             table_name="MyIngress.ipv4_lpm",
-            default_action="MyIngress.drop",
-            action_params={ }
+            default_action=True,
+            action_name="MyIngress.drop",
+            action_params={}
         )
 
         self._switch.WriteTableEntry(table_entry)
@@ -53,7 +56,7 @@ class SwitchController:
         """
         Reads the table entries from all tables on the switch.
         """
-        self._logger.log(message='\n----- Reading tables rules for %s -----' % self._switch.name)
+        self._logger.log(message=f'----- Reading tables rules for {self._switch.name} -----')
         for response in self._switch.ReadTableEntries():
             for entity in response.entities:
                 entry = entity.table_entry
@@ -95,25 +98,22 @@ class SwitchController:
                 else:
                     return entity.counter_entry.data.packet_count
 
-    def __init__(self, switchIndex: int):
+    def __init__(self, switchName: str, configuration: Dict[str, str]):
         """
         Initializes a new switch controller.
 
         The function sets-up a new P4 switch using the P4Info file and JSON file supplied
-        from the constants file.
+        from via the provided configuration.
 
         Args:
-            switchIndex (int): The index of the switch data in the `constants.py` file.
+            switchName (str): The name of the switch. E.g. s1
+            configuration (Dict[str, str]): The configuration of the switch, containing two keys (BMV2File, P4InfoFile)
         """
-        assert switchIndex >= 0 and switchIndex < len(SWITCHES), "Invalid switch index provided."
-
-        switchData = SWITCHES[switchIndex]
-
         self._logger = Logger()
-        self._p4info_helper = p4runtime_lib.helper.P4InfoHelper(switchData["P4InfoFile"])
-        self.__setupSwitch(switchData["BMV2File"], switchData["Switch"])
+        self._p4info_helper = p4runtime_lib.helper.P4InfoHelper(configuration["P4InfoFile"])
+        self.__setupSwitch(configuration["BMV2File"], switchName)
     
-    def __getDeviceSpecs(self, switch_name: str):
+    def __getDeviceSpecs(self, switch_name: str) -> Tuple[str, int]:
         """
         Computes the connection details for a specific switch based on its name.
 
@@ -127,9 +127,14 @@ class SwitchController:
         BASE_PORT = 50051
         BASE_ID = 0
 
-        delta_index = int(switch_name[1:]) - 1
+        try:
+            delta_index = int(switch_name[1:]) - 1
 
-        return (f'{BASE_IPv4}:{str(BASE_PORT + delta_index)}', BASE_ID + delta_index)
+            return (f'{BASE_IPv4}:{str(BASE_PORT + delta_index)}', BASE_ID + delta_index)
+        except ValueError:
+            self._logger.log(LoggingLevel.ERROR, f"Invalid switch name: {switch_name}.")
+            self._logger.log(LoggingLevel.INFO, "Please follow the following format: s[INDEX] (e.g. s1)")
+            exit(1)
 
     def __setupSwitch(self, BMV2File: str, switchName: str):
         """
@@ -137,6 +142,7 @@ class SwitchController:
 
         Args:
             BMV2File (str): The path to the switch'es BMV2 file.
+            switchName (str): The name of the switch. E.g. s1
         """
         switchAddress, deviceID = self.__getDeviceSpecs(switchName)
 

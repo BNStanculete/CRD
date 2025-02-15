@@ -5,3 +5,4 @@ data
 .vscode
 acert
 __pycache__
+db.sqlite3

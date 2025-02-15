@@ -1,13 +1,14 @@
 from modules.constants import HOSTS, PROXY_SERVER_ADDRESS, SERVER_ADDRESS
 from modules.controllers import SwitchController
+from typing import List
 
 class FirewallController(SwitchController):
-    def writeFilterRules(self, banned_addresses: list[int], updateType: str ="INSERT"):
+    def writeFilterRules(self, banned_addresses: List[int], updateType: str ="INSERT"):
         """
         Updates the firewall filter.
 
         Args:
-            banned_addresses (list[int]): A list of the indexes of all banned hosts
+            banned_addresses (List[int]): A list of the indexes of all banned hosts
             update_type (str): INSERT or MODIFY indicating whether to update existing rules or not.
         """
         if updateType == "INSERT":
@@ -64,5 +65,12 @@ class FirewallController(SwitchController):
         )
         self._switch.WriteTableEntry(table_entry)
 
-    def __init__(self, switchIndex: int):
-        super(FirewallController, self).__init__(switchIndex)
+    def __init__(self, switchName: str = "s1"):
+        configuration = {
+            "P4InfoFile": "build/firewall.p4.p4info.txt",
+            "BMV2File": "build/firewall.json"
+        }
+
+        super(FirewallController, self).__init__(switchName, configuration)
+
+        self._logger.log(message="Switch class: FilterFirewall")

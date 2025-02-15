@@ -27,5 +27,12 @@ class CounterController(SwitchController):
                 )
             self._switch.WriteTableEntry(table_entry)
 
-    def __init__(self, switchIndex: int):
-        super(CounterController, self).__init__(switchIndex)
+    def __init__(self, switchName: str = "s1"):
+        configuration = {
+            "P4InfoFile": "build/switch.p4.p4info.txt",
+            "BMV2File": "build/switch.json"
+        }
+
+        super(CounterController, self).__init__(switchName, configuration)
+
+        self._logger.log(message="Switch class: Counter")

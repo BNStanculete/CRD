@@ -1,6 +1,6 @@
-from annotantions import singleton
-from enum import Enum
+from modules.annotantions import singleton
 from datetime import datetime
+from enum import Enum
 
 class LoggingLevel(Enum):
     DEBUG = 0
@@ -18,13 +18,13 @@ class Logger:
             logLevel (LoggingLevel): The level of the associated log message. Defaults to DEBUG
             message (str): The message to be logged.
         """
-        if logLevel < self.__maxLevel or not self.__goodFile:
+        if logLevel.value < self.__maxLevel.value or not self.__goodFile:
             return
         
         self.__file.write(
-            f"[{datetime.now().timestamp()}][{logLevel.name}] {message}\n")
+            f"[{datetime.now()}][{logLevel.name}] {message}\n")
 
-    def __init__(self, logFile: str = "logs/control_plane.log", logLevel: LoggingLevel = LoggingLevel.INFO):
+    def __init__(self, logFile: str = "logs/control_plane.log", logLevel: LoggingLevel = LoggingLevel.DEBUG):
         self.__file = open(logFile, "w")
         self.__maxLevel = logLevel
         self.__goodFile = True

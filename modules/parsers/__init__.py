@@ -1,1 +1,1 @@
-from configParser import TopologyParser
+from configParser import ConfigurationParser
