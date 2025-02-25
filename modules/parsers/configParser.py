@@ -9,8 +9,9 @@ class ConfigurationParser:
             "topology": ConfigurationParser.JSONParser(topologyFile),
             "filter": ConfigurationParser.JSONParser(filterFile)
         }
+        self.__logger.log(LoggingLevel.INFO, "Initialized ConfigurationParser.")
 
-    def __getattribute__(self, name: str):
+    def __getitem__(self, name: str):
         """
         Gives access to a specific configuration.
 
@@ -26,7 +27,7 @@ class ConfigurationParser:
     class JSONParser:
         def __init__(self, configFile: str = ""):
             self.__logger = Logger()
-            self.__logger.log(LoggingLevel.INFO, "Initialized ConfigurationParser.")
+            self.__logger.log(message=f"Creating JSONParser for file: {configFile}")
             self.__loadedJSON = False
 
             mime = Magic(mime=True)
@@ -45,7 +46,7 @@ class ConfigurationParser:
             except JSONDecodeError as err:
                 self.__logger.log(LoggingLevel.ERROR, f"Error parsing configuration file: {configFile} !")
 
-        def __getattribute__(self, name: str = ""):
+        def __getitem__(self, name: str = ""):
             """
             Retrieves a specific configuration option
             """

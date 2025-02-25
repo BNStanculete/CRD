@@ -1,29 +1,29 @@
 {
     "hosts": {
-        "h1": {"ip": "10.0.1.1/32", "mac": "08:00:00:00:01:01",
+        "h1": {"ip": "10.0.1.1/24", "mac": "08:00:00:00:01:01",
                "commands":["route add default gw 10.0.1.10 dev eth0",
                            "arp -i eth0 -s 10.0.1.10 08:00:00:00:01:00",
                            "pip install dependencies/HTTPServer/*.whl",
                            "sudo ufw allow 443/tcp",
                            "sudo ufw allow 80/tcp"]},
 
-        "h2": {"ip": "10.0.2.2/32", "mac": "08:00:00:00:02:02",
+        "h2": {"ip": "10.0.2.2/24", "mac": "08:00:00:00:02:02",
                "commands":["route add default gw 10.0.2.20 dev eth0",
                            "arp -i eth0 -s 10.0.2.20 08:00:00:00:02:00"]},
 
-        "h3": {"ip": "10.0.3.3/32", "mac": "08:00:00:00:03:03",
+        "h3": {"ip": "10.0.3.3/24", "mac": "08:00:00:00:03:03",
                "commands":["route add default gw 10.0.3.30 dev eth0",
                            "arp -i eth0 -s 10.0.3.30 08:00:00:00:03:00",
                            "sudo mount -t securityfs securityfs /sys/kernel/security",
                            "sudo cp dependencies/HTTPClient/k6 /usr/local/bin"]},
 
-        "h4": {"ip": "10.0.4.4/32", "mac": "08:00:00:00:04:04",
+        "h4": {"ip": "10.0.4.4/24", "mac": "08:00:00:00:04:04",
                 "commands":["route add default gw 10.0.4.40 dev eth0",
                             "arp -i eth0 -s 10.0.4.40 08:00:00:00:04:00",
                             "sudo mount -t securityfs securityfs /sys/kernel/security",
                             "sudo cp dependencies/HTTPClient/k6 /usr/local/bin"]},
 
-        "h5": {"ip": "10.0.5.5/32", "mac": "08:00:00:00:05:05",
+        "h5": {"ip": "10.0.5.5/24", "mac": "08:00:00:00:05:05",
                 "commands":["route add default gw 10.0.5.50 dev eth0",
                             "arp -i eth0 -s 10.0.5.50 08:00:00:00:05:00",
                             "sudo mount -t securityfs securityfs /sys/kernel/security",

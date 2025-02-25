@@ -3,6 +3,7 @@ from server.models import Stock
 from django.views.decorators.csrf import csrf_exempt
 
 from django.db import transaction
+from json import dumps
 
 # Create your views here.
 import mmap
@@ -29,9 +30,11 @@ def update_counters(request):
     else:
         true_negatives += 1
 
-    with open("data/negatives.txt", "w") as file:
-        file.write(f"True Negatives: {true_negatives}\n")
-        file.write(f"False Negatives: {false_negatives}\n")
+    with open("data/negatives.json", "w") as file:
+        file.write(dumps({
+            "TrueNegatives": true_negatives,
+            "FalseNegatives": false_negatives
+        }))
 
 true_negatives = 0
 false_negatives = 0

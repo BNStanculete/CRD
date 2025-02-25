@@ -12,6 +12,9 @@ sys.path.append(
 from p4runtime_lib.switch import ShutdownAllSwitchConnections
 from modules.controllers import CounterController, FirewallController, SwitchController
 from modules.constants import HOSTS
+from json import dumps
+
+from modules.parsers import ResultParser
 
 
 def printGrpcError(e):
@@ -173,9 +176,11 @@ if __name__ == '__main__':
                     print("Timeout expired.")
             positives = getPositives(counterController)
 
-            with open("data/positives.txt", "w") as file:
-                file.write(f"True positives: {positives[0]}.\n")
-                file.write(f"False positives: {positives[1]}.\n")
+            with open("data/positives.json", "w") as file:
+                file.write(dumps({
+                    "TruePositives": positives[0],
+                    "FalsePositives": positives[1]
+                }))
 
             sleep(1)
 
@@ -183,5 +188,8 @@ if __name__ == '__main__':
         print(" Shutting down.")
     except grpc.RpcError as e:
         printGrpcError(e)
+
+    parser = ResultParser()
+    parser.getTestResults()
 
     ShutdownAllSwitchConnections()
